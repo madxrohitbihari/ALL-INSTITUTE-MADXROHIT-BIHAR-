@@ -693,9 +693,9 @@
             </div>
             
             <h2 class="auth-title">DEVICE VERIFICATION</h2>
-            <p class="auth-desc">Please enter your 30-character access key obtained from Get Key to unlock the portal (24 Hours Validity).</p>
+            <p class="auth-desc">Please enter your access key obtained from Get Key to unlock the portal (24 Hours Validity).</p>
             
-            <input type="text" id="accessKeyInput" class="key-input" maxlength="30" placeholder="ENTER 30-DIGIT ACCESS KEY">
+            <input type="text" id="accessKeyInput" class="key-input" maxlength="30" placeholder="ENTER ACCESS KEY">
             
             <button class="btn btn-get" onclick="openAroLinks()">
                 <i class="fa-solid fa-key" style="color: var(--accent-gold);"></i> Get Key
@@ -835,10 +835,10 @@
             const userKey = document.getElementById("accessKeyInput").value.trim();
             const msgDiv = document.getElementById("status-msg");
             
-            // Check if exact 30 letters/characters are entered
+            // Check if exact 30 characters are entered
             if (userKey.length !== 30) {
                 msgDiv.style.color = "#ff4444";
-                msgDiv.innerText = "⚠️ Key must be exactly 30 characters!";
+                msgDiv.innerText = "⚠️ Invalid code!";
                 return;
             }
 
@@ -848,7 +848,7 @@
             // Check if this key was already used before
             if (usedKeys.includes(userKey)) {
                 msgDiv.style.color = "#ff4444";
-                msgDiv.innerText = "⚠️ Already used code! Please GET NEW KEY";
+                msgDiv.innerText = "⚠️ Invalid code! Please GET NEW KEY";
                 return;
             }
 
