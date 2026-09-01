@@ -693,9 +693,9 @@
             </div>
             
             <h2 class="auth-title">DEVICE VERIFICATION</h2>
-            <p class="auth-desc">Please enter your access key obtained from Get Key to unlock the portal (24 Hours Validity).</p>
+            <p class="auth-desc">Please enter your 30-character access key obtained from Get Key to unlock the portal (24 Hours Validity).</p>
             
-            <input type="text" id="accessKeyInput" class="key-input" placeholder="ENTER ACCESS KEY">
+            <input type="text" id="accessKeyInput" class="key-input" maxlength="30" placeholder="ENTER 30-DIGIT ACCESS KEY">
             
             <button class="btn btn-get" onclick="openAroLinks()">
                 <i class="fa-solid fa-key" style="color: var(--accent-gold);"></i> Get Key
@@ -830,36 +830,38 @@
                 });
         }
 
-        // Updated Key Verification Logic with Single-Use Check & 24h Expiry
+        // Updated Key Verification Logic requiring EXACT 30 Characters
         function verifyUserKey() {
             const userKey = document.getElementById("accessKeyInput").value.trim();
             const msgDiv = document.getElementById("status-msg");
             
-            if (userKey.length >= 4) {
-                // Retrieve used keys list from localStorage
-                let usedKeys = JSON.parse(localStorage.getItem("usedAccessKeys")) || [];
-
-                // Check if this key was already used before
-                if (usedKeys.includes(userKey)) {
-                    msgDiv.style.color = "#ff4444";
-                    msgDiv.innerText = "⚠️ Already use code! Please GET NEW KEY";
-                    return;
-                }
-
-                // Mark the key as used
-                usedKeys.push(userKey);
-                localStorage.setItem("usedAccessKeys", JSON.stringify(usedKeys));
-
-                // Set 24 Hours Expiry Session
-                const expiryTime = new Date().getTime() + (24 * 60 * 60 * 1000); 
-                localStorage.setItem("appAuthExpiry", expiryTime);
-                
-                document.getElementById("authScreenWrapper").style.display = "none";
-                showToast("Portal Unlocked Successfully!");
-            } else {
+            // Check if exact 30 letters/characters are entered
+            if (userKey.length !== 30) {
                 msgDiv.style.color = "#ff4444";
-                msgDiv.innerText = "Invalid Access Key!";
+                msgDiv.innerText = "⚠️ Key must be exactly 30 characters!";
+                return;
             }
+
+            // Retrieve used keys list from localStorage
+            let usedKeys = JSON.parse(localStorage.getItem("usedAccessKeys")) || [];
+
+            // Check if this key was already used before
+            if (usedKeys.includes(userKey)) {
+                msgDiv.style.color = "#ff4444";
+                msgDiv.innerText = "⚠️ Already used code! Please GET NEW KEY";
+                return;
+            }
+
+            // Mark the key as used
+            usedKeys.push(userKey);
+            localStorage.setItem("usedAccessKeys", JSON.stringify(usedKeys));
+
+            // Set 24 Hours Expiry Session
+            const expiryTime = new Date().getTime() + (24 * 60 * 60 * 1000); 
+            localStorage.setItem("appAuthExpiry", expiryTime);
+            
+            document.getElementById("authScreenWrapper").style.display = "none";
+            showToast("Portal Unlocked Successfully!");
         }
 
         // Check verification status on load
@@ -1059,7 +1061,7 @@
 
         function filterApps() {  
             const query = document.getElementById('searchInput').value.toLowerCase();  
-            document.querySelectorAll('.app-card').forEach(card => {  
+            document.querySelectorAll('.app-card').card.forEach(card => {  
                 const name = card.getAttribute('data-name');  
                 card.style.display = (name && name.includes(query)) ? 'flex' : 'none';  
             });  
